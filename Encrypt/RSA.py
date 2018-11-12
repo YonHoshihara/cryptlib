@@ -1,5 +1,5 @@
 import random
-
+import yaml
 def totient(p1,p2):
 
     '''
@@ -62,6 +62,26 @@ def decrypt_caracter(caracter,key,tot):
     :return:
     '''
     return (caracter**key)%tot
+def generate_keys(p1,p2):
+    '''
+
+    :param p1:
+    :param p2:
+    :return:
+    '''
+
+    public_keys = get_public_keys(p1,p2)
+    public_key = public_keys[random.randrange(len(public_keys))]
+    private_key = multiplicative_inverse(public_key['k2'],public_key['k3'])
+    private_key = {"k1":public_key['k1'], "k2":private_key}
+    public_key = {'k1':public_key['k1'], 'k2': public_key['k2']}
+    archive = open('keys.yaml')
+    archive = yaml.load(archive)
+    archive['rsa_public'] = public_key
+    archive['rsa_private'] = private_key
+    archive['DES'] = archive['DES']
+    with open('keys.yaml', 'w') as f:
+        yaml.dump(archive, f)
 
 def multiplicative_inverse(e, phi):
     d = 0
@@ -89,7 +109,7 @@ def multiplicative_inverse(e, phi):
         return d + phi
     else:
         print('error')
-def rsa_encrypt (p1,p2,message):
+def rsa_encrypt (key,message):
 
     '''
 
@@ -98,28 +118,20 @@ def rsa_encrypt (p1,p2,message):
     :param message: the mesage to encrypt in a str
     :return: the keys used to encrypt and the encrypted mesage
     '''
-
-    conjunt_tam = p1*p2
-    keys = get_public_keys(p1,p2)
-    key = keys[random.randrange(len(keys))]
     encrypted_mesage = []
 
     for cacarter in message:
-        encrypted_mesage.append(str(encrypt_caracter(cacarter,int(key['k2']),conjunt_tam)))
+        encrypted_mesage.append(str(encrypt_caracter(cacarter, int(key['k2']), int(key['k1']))))
 
-    return {'key':key,'mesage':encrypted_mesage}
+    return encrypted_mesage
 
 def rsa_decrypt(mesage,key):
 
-    private_key = multiplicative_inverse(int(key['k2']),key['k3'])
     msg = []
     decrypted_mesage = ''
     for caracter in mesage:
-        msg.append(str(decrypt_caracter(int(caracter),int(private_key),int(key['k1']))))
+        msg.append(str(decrypt_caracter(int(caracter),int(key['k2']),int(key['k1']))))
     for mesage in msg:
         decrypted_mesage = decrypted_mesage + str(chr(int(mesage)))
     return decrypted_mesage
-
-
-
 
