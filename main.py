@@ -97,6 +97,17 @@ class Chat(Frame):
         self.container6["padx"] = 20
         self.container6["pady"] = 5
         self.container6.pack()
+        self.container7 = Frame(self)
+        self.container7["padx"] = 20
+        self.container7["pady"] = 5
+        self.container7.pack()
+        self.lblmsg = Label(self.container7, text="Mensages:", font=self.fonte, width=10)
+        self.lblmsg.pack(side=LEFT)
+        self.mesages = Chat_lib.get_mesages()
+        t = Text(self.container7)
+        for mesage in self.mesages:
+            t.insert(END,mesage + '\n')
+        t.pack()
 
         self.lblmsg = Label(self.container6, text="Mensagem:", font=self.fonte, width=10)
         self.lblmsg.pack(side=LEFT)
@@ -117,8 +128,9 @@ class Chat(Frame):
     def send_mesege(self):
         msg = self.txtmsg.get()
         Chat_lib.send_mesage(msg)
-        self.controller.show_frame(Chat)
 
+    def update(self):
+        self.mesages = Chat_lib.get_mesages()
 
 
 
@@ -175,4 +187,5 @@ class Register(Frame):
 
 
 app = SeaofBTCapp()
+
 app.mainloop()
