@@ -17,7 +17,7 @@ class SeaofBTCapp(Tk):
 
         self.frames = {}
 
-        for F in (Login, PageOne, Register):
+        for F in (Login, Chat, Register):
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -33,10 +33,12 @@ class SeaofBTCapp(Tk):
 
 class Login(Frame):
 
+
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
         label = Label(self, text="Login", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
+        self.controller = controller
         self.fonte = ("Verdana", "8")
         self.container6 = Frame(self)
         self.container6["padx"] = 20
@@ -64,24 +66,32 @@ class Login(Frame):
         self.txtsenha["font"] = self.fonte
         self.txtsenha.pack(side=LEFT)
 
-
-
-        button = Button(self, text="Login",
-                           command=lambda: controller.show_frame(PageOne))
-        button.pack()
+        self.bntLogin = Button(self, text="Login")
+        self.bntLogin["command"] = self.login
+        self.bntLogin.pack(side=LEFT)
 
         button2 = Button(self, text="Register",
                          command=lambda: controller.show_frame(Register))
-        button2.pack()
+        button2.pack(side= RIGHT)
 
+    def login(self):
 
-class PageOne(Frame):
+        user = self.txtusuario.get()
+        print(user)
+        password = self.txtsenha.get()
+        login_result = Chat_lib.login(user,password)
+        print(login_result)
+        if login_result:
+            self.controller.show_frame(Chat)
+            print('login sendo feito')
+
+class Chat(Frame):
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
-        label = Label(self, text="Page One!!!", font=LARGE_FONT)
+        label = Label(self, text="Chat", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
-
+        self.controller = controller
         button1 = Button(self, text="Back to Home",
                          command=lambda: controller.show_frame(Login))
         button1.pack()
@@ -97,6 +107,7 @@ class Register(Frame):
         Frame.__init__(self, parent)
         label = Label(self, text="Register", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
+        self.controller = controller
         self.fonte = ("Verdana", "8")
         self.container6 = Frame(self)
         self.container6["padx"] = 20
@@ -124,13 +135,21 @@ class Register(Frame):
         self.txtsenha["font"] = self.fonte
         self.txtsenha.pack(side=LEFT)
 
-        button = Button(self, text="Login",
-                        command=lambda: controller.show_frame(Login))
-        button.pack()
+        self.bntLogin = Button(self, text="Register")
+        self.bntLogin["command"] = self.register
+        self.bntLogin.pack(side=RIGHT)
 
-        button2 = Button(self, text="Register",
+        button2 = Button(self, text="Login",
                          command=lambda: controller.show_frame(Register))
-        button2.pack()
+        button2.pack(side=LEFT)
+
+    def register(self):
+        user = self.txtusuario.get()
+        password = self.txtsenha.get()
+        print(user)
+        print(password)
+        Chat_lib.register(user, password)
+        self.controller.show_frame(Login)
 
 
 app = SeaofBTCapp()
