@@ -64,10 +64,17 @@ def get_mesages():
     Todo: decrypt with RSA key and Decrypt with DES key
     :return: mesage decrypted
     '''
+    chat = open('chat.yaml')
+    chat = yaml.load(chat)
+    mesages = chat['mesages']
+    keys = open('keys.yaml')
+    keys = yaml.load(keys)
+    rsa_key = keys['rsa_private']
+    mesages_decrypted = []
+    for mesage  in mesages:
+        mesages_decrypted.append(RSA.rsa_decrypt(mesage,rsa_key))
+    return mesages_decrypted
 
-    pass
 def backlog():
     pass
 
-
-print(send_mesage('Oi meninas tudo bom'))
