@@ -91,14 +91,36 @@ class Chat(Frame):
         Frame.__init__(self, parent)
         label = Label(self, text="Chat", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
+        self.fonte = ("Verdana", "8")
         self.controller = controller
-        button1 = Button(self, text="Back to Home",
-                         command=lambda: controller.show_frame(Login))
-        button1.pack()
+        self.container6 = Frame(self)
+        self.container6["padx"] = 20
+        self.container6["pady"] = 5
+        self.container6.pack()
 
-        button2 = Button(self, text="Page Two",
-                         command=lambda: controller.show_frame(Register))
-        button2.pack()
+        self.lblmsg = Label(self.container6, text="Mensagem:", font=self.fonte, width=10)
+        self.lblmsg.pack(side=LEFT)
+
+        self.txtmsg = Entry(self.container6)
+        self.txtmsg["width"] = 25
+        self.txtmsg["font"] = self.fonte
+        self.txtmsg.pack(side=LEFT)
+
+        # button1 = Button(self, text="Back to Home",
+        #                  command=lambda: controller.show_frame(Login))
+        # button1.pack(side=LEFT)
+
+        self.bntLogin = Button(self, text="Send")
+        self.bntLogin["command"] = self.send_mesege
+        self.bntLogin.pack(side=RIGHT)
+
+    def send_mesege(self):
+        msg = self.txtmsg.get()
+        Chat_lib.send_mesage(msg)
+        self.controller.show_frame(Chat)
+
+
+
 
 
 class Register(Frame):
