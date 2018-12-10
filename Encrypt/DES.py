@@ -231,12 +231,12 @@ class des():
     def decrypt(self, key, text, padding=False):
         return self.run(key, text, DECRYPT, padding)
 
-#
-# if __name__ == '__main__':
-#     key = "secret_k"
-#     text = "Hello wo"
-#     d = des()
-#     r = d.encrypt(key, text)
-#     r2 = d.decrypt(key, r)
-#     print(r)
-#     print(r2)
+
+if __name__ == '__main__':
+     key = "secret_k"
+     text = "Hello wo"
+     d = des()
+     r = d.encrypt(key, text)
+     r2 = d.decrypt(key, r)
+     print(r)
+     print(r2)

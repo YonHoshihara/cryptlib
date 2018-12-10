@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/yonhoshihara/PycharmProjects/RSA/venv"
+VIRTUAL_ENV="/home/yonhoshihara/Documentos/cryptlib/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/yonhoshihara/PycharmProjects/RSA/venv"
+set -gx VIRTUAL_ENV "/home/yonhoshihara/Documentos/cryptlib/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

@@ -2,7 +2,7 @@ import yaml
 from Encrypt import DES
 from  Encrypt import Hash
 from Encrypt import RSA
-
+from Encrypt import DES
 
 def register(login,password):
     '''
@@ -50,11 +50,18 @@ def send_mesage(message):
 
     keys = open('keys.yaml')
     keys = yaml.load(keys)
-    chat =  open('chat.yaml')
+    print(keys)
+    chat = open('chat.yaml')
     chat = yaml.load(chat)
     key_RSA = keys['rsa_public']
-    encrypt_msg = RSA.rsa_encrypt(key_RSA,message)
-    chat['mesages'].append(encrypt_msg)
+    key_DES = keys['DES']
+    print(key_DES)
+    des = DES.des()
+    encrypt_msg = des.encrypt(key_DES,message)
+    key_DES_encrypted = RSA.rsa_encrypt(key_RSA, key_DES)
+    hash_mesage = Hash.generate_hash_md5(message)
+    result = {'DES_key': key_DES_encrypted,'hash_mesage':hash_mesage,'encrypt_mesage':encrypt_msg}
+    chat['mesages'].append(result)
     with open('chat.yaml','w') as f:
         yaml.dump(chat, f)
 
@@ -66,13 +73,24 @@ def get_mesages():
     '''
     chat = open('chat.yaml')
     chat = yaml.load(chat)
+    des = DES.des()
+
     mesages = chat['mesages']
     keys = open('keys.yaml')
     keys = yaml.load(keys)
-    rsa_key = keys['rsa_private']
+    rsa_key_private = keys['rsa_private']
     mesages_decrypted = []
+
     for mesage  in mesages:
-        mesages_decrypted.append(RSA.rsa_decrypt(mesage,rsa_key))
+        des_key = RSA.rsa_decrypt(mesage['DES_key'],rsa_key_private)
+        print(des_key)
+        msg= des.decrypt(des_key,mesage['encrypt_mesage'],)
+        hash_msg = Hash.generate_hash_md5(msg)
+        #print(hash_msg)
+        #print(msg)
+        if hash_msg == mesage['hash_mesage']:
+            mesages_decrypted.append(msg)
+
     return mesages_decrypted
 
 def backlog():
